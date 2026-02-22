@@ -9,6 +9,8 @@ class EventBase(BaseModel):
     start_time: time
     location: str
     experience_level: str
+    latitude: float
+    longitude: float
 
 class EventCreate(EventBase):
     pass
