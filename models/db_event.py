@@ -7,10 +7,10 @@ class DBEvent(Base):
     __tablename__ = "events"
 
     event_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, index=True)
-    sport = Column(String)
+    title = Column(String(100), index=True)
+    sport = Column(String(100))
     start_date = Column(Date)
     start_time = Column(Time)
-    location = Column(String)
-    experience_level = Column(String)
-    created_by = Column(String)
+    location = Column(String(100))
+    experience_level = Column(String(50))
+    created_by = Column(String(100))
