@@ -14,5 +14,6 @@ class DBEvent(Base):
     location = Column(String(100))
     experience_level = Column(String(50))
     created_by = Column(String(100))
+    description = Column(String(500), nullable=True)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)

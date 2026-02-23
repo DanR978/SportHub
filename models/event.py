@@ -9,11 +9,12 @@ class EventBase(BaseModel):
     start_time: time
     location: str
     experience_level: str
-    latitude: float
-    longitude: float
+    description: str | None = None
 
 class EventCreate(EventBase):
     pass
 
 class Event(EventBase):
     id: UUID = Field(default_factory=uuid4)
+    latitude: float | None = None
+    longitude: float | None = None
