@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, String, Time
+from sqlalchemy import Column, Date, String, Time, Float, Integer, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from database import Base
@@ -11,6 +11,10 @@ class DBUser(Base):
     last_name = Column(String(50), index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    date_of_birth = Column(Date)
-    nationality = Column(String(100))
+    date_of_birth = Column(Date, nullable=True)
+    nationality = Column(String(100), nullable=True)
     phone_number = Column(String(20), nullable=True)
+    bio = Column(String(150), nullable=True)
+    sports = Column(String, nullable=True)
+    avatar_config = Column(String, nullable=True)
+    avatar_photo = Column(String, nullable=True)

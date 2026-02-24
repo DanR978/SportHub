@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, String, Time, Float
+from sqlalchemy import Column, Date, String, Time, Float, Integer, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from database import Base
@@ -17,3 +17,8 @@ class DBEvent(Base):
     description = Column(String(500), nullable=True)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
+    organizer_id = Column(UUID(as_uuid=True), ForeignKey('users.user_id'), nullable=True)
+    max_players  = Column(Integer, default=10)
+    cost         = Column(Numeric(6, 2), default=0.00)
+    status       = Column(String(20), default='active')
+    end_time     = Column(Time, nullable=True)

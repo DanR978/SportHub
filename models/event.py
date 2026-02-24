@@ -10,11 +10,21 @@ class EventBase(BaseModel):
     location: str
     experience_level: str
     description: str | None = None
+    max_players: int = 10
+    cost: float = 0.00
+    end_time: time | None = None
 
 class EventCreate(EventBase):
     pass
 
 class Event(EventBase):
-    id: UUID = Field(default_factory=uuid4)
+    event_id: UUID = Field(default_factory=uuid4)
     latitude: float | None = None
     longitude: float | None = None
+    organizer_id: UUID | None = None
+    status: str = 'active'
+    participant_count: int = 0
+    joined: bool = False
+
+    class Config:
+        from_attributes = True

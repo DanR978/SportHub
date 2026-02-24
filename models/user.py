@@ -1,17 +1,43 @@
 from uuid import UUID, uuid4
 from pydantic import BaseModel, EmailStr, Field
 from datetime import date
+from typing import Optional, List
 
 class UserBase(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
-    date_of_birth: date
-    nationality: str
-    phone_number: str | None = None
+    date_of_birth: Optional[date] = None
+    nationality: Optional[str] = None
+    phone_number: Optional[str] = None
 
 class UserCreate(UserBase):
     password: str
 
 class User(UserBase):
     user_id: UUID = Field(default_factory=uuid4)
+    bio: Optional[str] = None
+    sports: Optional[str] = None
+    avatar_config: Optional[str] = None
+    avatar_photo: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+class SocialLoginRequest(BaseModel):
+    access_token: Optional[str] = None
+    identity_token: Optional[str] = None
+    email: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    date_of_birth: Optional[date] = None
+    nationality: Optional[str] = None
+    phone_number: Optional[str] = None
+    bio: Optional[str] = None
+    sports: Optional[str] = None
+    avatar_config: Optional[str] = None
+    avatar_photo: Optional[str] = None
