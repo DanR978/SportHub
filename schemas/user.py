@@ -1,7 +1,9 @@
 from uuid import UUID, uuid4
 from pydantic import BaseModel, EmailStr, Field
 from datetime import date
-from typing import Optional, List
+from typing import Optional
+from decimal import Decimal
+
 
 class UserBase(BaseModel):
     first_name: str
@@ -11,8 +13,10 @@ class UserBase(BaseModel):
     nationality: Optional[str] = None
     phone_number: Optional[str] = None
 
+
 class UserCreate(UserBase):
     password: str
+
 
 class User(UserBase):
     user_id: UUID = Field(default_factory=uuid4)
@@ -20,9 +24,15 @@ class User(UserBase):
     sports: Optional[str] = None
     avatar_config: Optional[str] = None
     avatar_photo: Optional[str] = None
+    host_rating: Optional[Decimal] = None
+    total_ratings: Optional[int] = 0
+    instagram: Optional[str] = None
+    facebook: Optional[str] = None
+    is_active: bool = True
 
     class Config:
         from_attributes = True
+
 
 class SocialLoginRequest(BaseModel):
     access_token: Optional[str] = None
@@ -30,6 +40,7 @@ class SocialLoginRequest(BaseModel):
     email: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
+
 
 class UserUpdate(BaseModel):
     first_name: Optional[str] = None
@@ -41,3 +52,6 @@ class UserUpdate(BaseModel):
     sports: Optional[str] = None
     avatar_config: Optional[str] = None
     avatar_photo: Optional[str] = None
+    instagram: Optional[str] = None
+    facebook: Optional[str] = None
+    is_active: Optional[bool] = None

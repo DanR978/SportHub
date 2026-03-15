@@ -8,7 +8,7 @@ class DBHostRating(Base):
     __tablename__ = "host_ratings"
 
     rating_id  = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    event_id   = Column(UUID(as_uuid=True), ForeignKey('events.event_id'), nullable=False)
+    event_id   = Column(UUID(as_uuid=True), nullable=False)
     rater_id   = Column(UUID(as_uuid=True), ForeignKey('users.user_id'), nullable=False)
     host_id    = Column(UUID(as_uuid=True), ForeignKey('users.user_id'), nullable=False)
     rating     = Column(Integer, nullable=False)

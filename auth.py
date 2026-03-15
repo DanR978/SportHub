@@ -9,30 +9,31 @@ from models.db_user import DBUser
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
-load_dotenv()
-
 SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "43200"))
 
-def hash_password(plain_password):
+
+def hash_password(plain_password: str) -> str:
     return bcrypt.hash(plain_password)
 
-def verify_password(plain_password, hashed_password):
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.verify(plain_password, hashed_password)
 
-def create_access_token(data: dict):
+
+def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
+    return jwt.encode(claims=to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
 
-    encoded_jwt = jwt.encode(claims=to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> DBUser:
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
@@ -45,7 +46,18 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
             raise credentials_exception
     except jwt.JWTError:
         raise credentials_exception
+
     user = db.query(DBUser).filter(DBUser.email == email).first()
     if user is None:
         raise credentials_exception
+    if not user.is_active:
+        raise HTTPException(status_code=403, detail="Account is deactivated")
     return user
+
+
+def get_optional_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    """Return current user or None — never raises."""
+    try:
+        return get_current_user(token, db)
+    except Exception:
+        return None

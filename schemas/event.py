@@ -1,6 +1,7 @@
 from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
 from datetime import date, time
+from typing import Optional
 
 class EventBase(BaseModel):
     title: str
@@ -15,7 +16,22 @@ class EventBase(BaseModel):
     end_time: time | None = None
 
 class EventCreate(EventBase):
-    pass
+    latitude: float | None = None
+    longitude: float | None = None
+
+class EventUpdate(BaseModel):
+    title: Optional[str] = None
+    sport: Optional[str] = None
+    start_date: Optional[date] = None
+    start_time: Optional[time] = None
+    location: Optional[str] = None
+    experience_level: Optional[str] = None
+    description: Optional[str] = None
+    max_players: Optional[int] = None
+    cost: Optional[float] = None
+    end_time: Optional[time] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 class Event(EventBase):
     event_id: UUID = Field(default_factory=uuid4)
